@@ -45,18 +45,20 @@ public class RentalService {
                     }
                 }else if(select==2){
                     List<Car> carList = carService.searchCar();
-                    Long choice = InputHelper.getLongInput("Select a car by Id to rent: ");
-                    if(carList.stream().anyMatch(car -> car.getId().equals(choice))) {
-                        Rental rental = Rental.builder()
-                                .startDate(Date.valueOf(startDate))
-                                .endDate(Date.valueOf(endDate))
-                                .user(SessionContext.getUser())
-                                .car(carList.stream().filter(car -> car.getId().equals(choice)).findFirst().get())
-                                .build();
-                        rentalRepository.save(rental);
-                        System.out.println("Car rented successfully.");
-                    }else {
-                        OutputHelper.errorMessage("Invalid choice!");
+                    if(!carList.isEmpty()){
+                        Long choice = InputHelper.getLongInput("Select a car by Id to rent: ");
+                        if(carList.stream().anyMatch(car -> car.getId().equals(choice))) {
+                            Rental rental = Rental.builder()
+                                    .startDate(Date.valueOf(startDate))
+                                    .endDate(Date.valueOf(endDate))
+                                    .user(SessionContext.getUser())
+                                    .car(carList.stream().filter(car -> car.getId().equals(choice)).findFirst().get())
+                                    .build();
+                            rentalRepository.save(rental);
+                            System.out.println("Car rented successfully.");
+                        }else {
+                            OutputHelper.errorMessage("Invalid choice!");
+                        }
                     }
                 }else{
                     OutputHelper.errorMessage("Invalid choice!");
