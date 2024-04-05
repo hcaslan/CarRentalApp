@@ -26,25 +26,29 @@ public class CarService {
         carRepository.save(Car.builder().brand(brand).model(model).year(year).build());
     }
 
-    public void searchCar() {
+    public List<Car> searchCar() {
         String keyword = InputHelper.getStringInput("Enter the Keyword for Search(To search by id, type ID): ");
+        List<Car> list = new ArrayList<>();
         if(keyword.equalsIgnoreCase("ID")){
-            searchCarById();
+            Optional<Car> car = searchCarById();
+            car.ifPresent(list::add);
         }else{
-            searchCarByKeyword(keyword);
+            list.addAll(searchCarByKeyword(keyword));
         }
+        return list;
     }
 
-    private void searchCarByKeyword(String keyword) {
+    private List<Car> searchCarByKeyword(String keyword) {
         List<Car> carList = carRepository.searchCarByKeyword(keyword);
         if(!carList.isEmpty()){
             carList.forEach(System.out::println);
         }else{
             OutputHelper.errorMessage("No car matching this keyword!");
         }
+        return carList;
     }
 
-    private void searchCarById(){
+    private Optional<Car> searchCarById(){
         Long id = InputHelper.getLongInput("Enter the car id: ");
         Optional<Car> carOptional = carRepository.findById(id);
         if(carOptional.isPresent()){
@@ -52,6 +56,7 @@ public class CarService {
         }else{
             OutputHelper.errorMessage("No cars with this ID!");
         }
+        return carOptional;
     }
 
     public void listCarsOnRent() {

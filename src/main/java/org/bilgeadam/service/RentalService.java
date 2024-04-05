@@ -28,17 +28,37 @@ public class RentalService {
                 System.out.println("No cars available.");
             }else {
                 availableCars.forEach(System.out::println);
-                Long choice = InputHelper.getLongInput("Select a car by Id to rent: ");
-                if(availableCars.stream().anyMatch(car -> car.getId().equals(choice))) {
-                    Rental rental = Rental.builder()
-                            .startDate(Date.valueOf(startDate))
-                            .endDate(Date.valueOf(endDate))
-                            .user(SessionContext.getUser())
-                            .car(availableCars.stream().filter(car -> car.getId().equals(choice)).findFirst().get())
-                            .build();
-                    rentalRepository.save(rental);
-                    System.out.println("Car rented successfully.");
-                }else {
+                int select = InputHelper.getIntegerInput("1: Select \n2: Filter");
+                if(select==1){
+                    Long choice = InputHelper.getLongInput("Select a car by Id to rent: ");
+                    if(availableCars.stream().anyMatch(car -> car.getId().equals(choice))) {
+                        Rental rental = Rental.builder()
+                                .startDate(Date.valueOf(startDate))
+                                .endDate(Date.valueOf(endDate))
+                                .user(SessionContext.getUser())
+                                .car(availableCars.stream().filter(car -> car.getId().equals(choice)).findFirst().get())
+                                .build();
+                        rentalRepository.save(rental);
+                        System.out.println("Car rented successfully.");
+                    }else {
+                        OutputHelper.errorMessage("Invalid choice!");
+                    }
+                }else if(select==2){
+                    List<Car> carList = carService.searchCar();
+                    Long choice = InputHelper.getLongInput("Select a car by Id to rent: ");
+                    if(carList.stream().anyMatch(car -> car.getId().equals(choice))) {
+                        Rental rental = Rental.builder()
+                                .startDate(Date.valueOf(startDate))
+                                .endDate(Date.valueOf(endDate))
+                                .user(SessionContext.getUser())
+                                .car(carList.stream().filter(car -> car.getId().equals(choice)).findFirst().get())
+                                .build();
+                        rentalRepository.save(rental);
+                        System.out.println("Car rented successfully.");
+                    }else {
+                        OutputHelper.errorMessage("Invalid choice!");
+                    }
+                }else{
                     OutputHelper.errorMessage("Invalid choice!");
                 }
             }
