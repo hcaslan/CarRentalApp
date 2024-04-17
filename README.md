@@ -102,3 +102,7 @@ The Car Rental Application follows a standard project structure to organize its 
    - Once logged in, select the "Update User Information" option from the menu.
    - Follow the prompts to enter the new information you want to update.
    - Confirm the changes, and your information will be updated in the system.
+
+---
+
+This project was developed for Java programming courses. [Bilge Adam](https://www.bilgeadam.com/).
